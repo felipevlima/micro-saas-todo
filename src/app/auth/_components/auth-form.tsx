@@ -1,22 +1,28 @@
 'use client'
-import { Label } from '@/components/ui/label'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { useForm } from 'react-hook-form'
-import { signIn } from 'next-auth/react'
-import { toast } from '@/components/ui/use-toast'
+
+import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { useForm } from "react-hook-form"
+import { signIn } from "next-auth/react"
+import { toast } from "@/components/ui/use-toast"
 
 export function AuthForm() {
   const form = useForm()
 
+  const handleGithubLogin = async () => {
+    await signIn('github', { callbackUrl: "/app" })
+  }
+
   const handleSubmit = form.handleSubmit(async (data) => {
     try {
       await signIn('email', { email: data.email, redirect: false })
+      
       toast({
         title: 'Magic Link Sent',
         description: 'Check your email for the magic link to login'
       })
-    } catch(err) {
+    } catch (error) {
       toast({
         title: 'Error',
         description: 'An error occurred. Please try again.'
@@ -25,20 +31,21 @@ export function AuthForm() {
   })
 
   return (
-    <div className='mx-auto max-w-sm space-y-8'>
-      <div className='space-y-2 text-center'>
-        <h1 className='text-3xl font-bold'>Login</h1>
-        <p className='text-gray-500 dark:text-gray-400'>Enter your email below to login to your account</p>
+    <div className="mx-auto max-w-sm space-y-8">
+      <div className="space-y-2 text-center">
+        <h1 className="text-3xl font-bold">Login</h1>
+        <p className="text-gray-500 dark:text-gray-400">Enter your email below to login to your account</p>
       </div>
-      <form className="space-y-4" onSubmit={handleSubmit}>
-        <div className='space-y-2'>
-          <Label htmlFor='email'>Email</Label>
-          <Input id='email' placeholder='m@example.com' required type='email' {...form.register('email')}/>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="email">Email</Label>
+          <Input id="email" placeholder="m@example.com" required type="email" {...form.register('email')} />
         </div>
-        <Button className='w-full' type='submit'>
+        <Button className="w-full" type="submit">
           Send Magic Link
         </Button>
       </form>
+      <Button className="w-full bg-black text-white hover:bg-slate-900" onClick={handleGithubLogin}>Login with Github</Button>
     </div>
   )
 }

@@ -1,6 +1,5 @@
-import { getURL } from "next/dist/shared/lib/utils";
-import { NextRequest, NextResponse } from "next/server";
-import { getUrl } from "./lib/getUrl";
+import { NextRequest, NextResponse } from 'next/server'
+import { getUrl } from './lib/getUrl'
 
 export function middleware(request: NextRequest) {
   const token = request.cookies.get('authjs.session-token')
@@ -13,9 +12,8 @@ export function middleware(request: NextRequest) {
   if (pathname.includes('/app') && !token) {
     return NextResponse.redirect(new URL(getUrl('/auth')))
   }
-
 }
 
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)']
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
 }
